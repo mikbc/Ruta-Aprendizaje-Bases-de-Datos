@@ -2,7 +2,11 @@
 SELECT function
 FROM job;
 
--- 3) 
+-- 3)
+SELECT last_name||', '||first_name 
+        as full_name
+FROM employee
+ORDER BY last_name;
 
 -- 4)
 -- 5)
