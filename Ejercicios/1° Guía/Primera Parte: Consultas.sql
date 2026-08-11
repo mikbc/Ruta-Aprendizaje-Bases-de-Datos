@@ -4,11 +4,16 @@ FROM job;
 
 -- 3)
 SELECT last_name||', '||first_name 
-        as full_name
+        AS full_name
 FROM employee
 ORDER BY last_name;
 
 -- 4)
+SELECT (first_name||' '||last_name) 
+        AS full_name
+FROM employee
+WHERE salary>1500 AND salary<2850;
+
 -- 5)
 -- 6)
 -- 7)
