@@ -114,6 +114,10 @@ SELECT COUNT(employee_id)
 FROM employee;
 
 -- 18)
+SELECT COUNT(customer_id)
+FROM customer
+WHERE state = 'NY';
+
 -- 19)
 -- 20)
 -- 21)
