@@ -119,8 +119,35 @@ FROM customer
 WHERE state = 'NY';
 
 -- 19)
+SELECT COUNT(DISTINCT(M.employee_id)) 
+    AS JEFES
+FROM employee E,
+    employee M
+WHERE(E.manager_id = M.employee_id);
+
 -- 20)
+SELECT (E.last_name||', '||E.first_name) AS full_name, 
+    E.salary,
+    D.name AS department
+FROM employee E,
+    department D
+WHERE (E.department_id = D.department_id)
+    AND job_id = (SELECT job_id
+                FROM employee
+                WHERE (first_name = 'JOHN')
+                    AND (last_name = 'SMITH'))
+ORDER BY E.salary, E.last_name;
+
 -- 21)
+SELECT (E.last_name||', '||E.first_name) AS full_name,
+    D.name AS department,
+    E.salary
+FROM employee E,
+    department D
+WHERE (E.department_id = D.department_id) 
+    AND E.salary > (SELECT AVG(salary)
+                    FROM employee);
+
 -- 22)
 -- 23)
 -- 24)
