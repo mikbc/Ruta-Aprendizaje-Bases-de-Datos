@@ -126,6 +126,12 @@ FROM employee E,
 WHERE(E.manager_id = M.employee_id);
 
 -- 20)
+SELECT *
+FROM employee
+WHERE hire_date = (SELECT MIN(hire_date)
+                   FROM employee);
+
+-- 21)
 SELECT (E.last_name||', '||E.first_name) AS full_name, 
     E.salary,
     D.name AS department
@@ -138,7 +144,7 @@ WHERE (E.department_id = D.department_id)
                     AND (last_name = 'SMITH'))
 ORDER BY E.salary, E.last_name;
 
--- 21)
+-- 22)
 SELECT (E.last_name||', '||E.first_name) AS full_name,
     D.name AS department,
     E.salary
@@ -148,13 +154,53 @@ WHERE (E.department_id = D.department_id)
     AND E.salary > (SELECT AVG(salary)
                     FROM employee);
 
--- 22)
 -- 23)
+SELECT MAX(total) AS máxima,
+    MIN(total) AS mínima
+FROM sales_order;
+
 -- 24)
+SELECT customer_id,
+    COUNT(order_id)
+FROM sales_order
+GROUP BY customer_id;
+
 -- 25)
+SELECT C.name AS nombre, 
+    C.phone_number,
+    COUNT(S.order_id)
+FROM sales_order S,
+    customer C
+WHERE S.customer_id = C.customer_id
+GROUP BY C.customer_id, C.name, C.phone_number;
+
 -- 26)
+SELECT M.employee_id,
+       COUNT(E.employee_id) AS cantidad_empleados
+FROM employee E,
+     employee M
+WHERE M.employee_id = E.manager_id
+GROUP BY M.employee_id
+HAVING COUNT(E.employee_id) >= 2;
+
 -- 27)
+SELECT (A.first_name||' '||A.last_name) AS antiguo,
+    (N.first_name||' '||N.last_name) AS nuevo
+FROM employee A,
+    employee N
+WHERE A.hire_date = (SELECT MIN(hire_date)
+                    FROM employee)
+    AND N.hire_date = (SELECT MAX(hire_date)
+                        FROM employee);
+
 -- 28)
+SELECT department_id, 
+    COUNT(employee_id) AS cantidad_empleados
+FROM employee
+WHERE (department_id = 20) 
+    OR (department_id = 30)
+GROUP BY department_id;
+
 -- 29)
 -- 30)
 -- 31)
