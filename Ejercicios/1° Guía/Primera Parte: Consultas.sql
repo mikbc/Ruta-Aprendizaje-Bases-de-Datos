@@ -202,9 +202,82 @@ WHERE (department_id = 20)
 GROUP BY department_id;
 
 -- 29)
+SELECT round(AVG(E.salary), 2) AS promedio_salarios
+FROM employee E,
+    department D
+WHERE (E.department_id = D.department_id) 
+    AND (D.name = 'RESEARCH');
+
 -- 30)
+SELECT D.department_id,
+        D.name,
+        TRUNC(AVG(E.salary)) AS promedio_salario
+FROM department D,
+    employee E
+WHERE (D.department_id = E.department_id)
+GROUP BY D.department_id,
+        D.name
+ORDER BY AVG(E.salary);
+
 -- 31)
+SELECT D.department_id,
+        D.name,
+        TRUNC(AVG(E.salary)) AS promedio_salario,
+        COUNT(E.employee_id) AS cant_empleados
+FROM department D,
+    employee E
+WHERE D.department_id = E.department_id
+GROUP BY D.department_id,
+        D.name
+HAVING COUNT(E.employee_id) > 3 -- Practicar HAVING!!
+ORDER BY AVG(E.salary);
+
 -- 32)
+SELECT P.product_id, 
+        NVL(SUM(I.quantity), 0) AS unidades_pedidas, -- Ojo! SUM != COUNT
+        MAX(I.actual_price)AS precio_max
+FROM product P,
+    item I
+WHERE (P.product_id = I.product_id) -- ??? Está mal! No me aparecen todos los productos
+GROUP BY P.product_id
+ORDER BY P.product_id;
+
 -- 33)
+SELECT C.name,
+    C.phone_number,
+    COUNT(S.order_id) AS cant_ordenes,
+    MAX(S.order_date) AS última_orden
+FROM customer C,
+    sales_order S
+WHERE C.customer_id = S.customer_id
+GROUP BY C.name,
+        C.phone_number
+ORDER BY C.name;
+
 -- 34)
+SELECT L.location_id,
+        L.regional_group,
+        COUNT(E.employee_id) AS cant_empleados,
+        SUM(E.salary) AS total_salarios
+FROM location L,
+    department D,
+    employee E
+WHERE (L.location_id = D.location_id) 
+    AND (D.department_id = E.department_id)
+GROUP BY L.location_id,
+        L.regional_group
+ORDER BY COUNT(E.employee_id);
+
 -- 35)
+SELECT (E.first_name||' '||E.last_name) AS full_name,
+    E.salary,
+    D.name,
+    J.function
+FROM employee E,
+    employee M,
+    department D,
+    job J
+WHERE (E.manager_id = M.employee_id)
+    AND (E.salary > M.salary)
+    AND (E.department_id = D.department_id)
+    AND (E.job_id = J.job_id);
