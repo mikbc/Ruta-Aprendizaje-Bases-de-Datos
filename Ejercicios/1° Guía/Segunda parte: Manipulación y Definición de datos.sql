@@ -59,8 +59,31 @@ VALUES (50, 'EDUCATION', 100); -- Para que funcione, habría que insertar antes 
 INSERT INTO department (department_id, name)
 VALUES (43, 'OPERATIONS'); -- Porque ya existe un department_id = 43 con nombre 'SALES' y no se pueden repetir la clave primaria FK. 
 
--- 16)
+-- 16) No, no se puede modificar la localidad del departmento 20, para que pertenezca a la localidad 155, haciendo:
+UPDATE department
+SET location_id = 155 -- Porque la localidad con id 155 no existe. Habría que darla de alta primero.
+WHERE department_id = 20;
+
 -- 17)
--- 18)
+UPDATE employee
+SET salary = salary + ((salary*10)/100) -- Ó multiplicas salary * 1.10
+WHERE salary < (SELECT AVG(salary)
+                FROM employee);
+-- 18) 
+UPDATE client
+SET credit_limit = credit_limit + ((credit_limit*5)/100)
+WHERE customer_id IN (SELECT customer_id -- WHERE ... IN --> hace que el UPDATE afecte solamente a esos clientes.
+                    FROM sales_order
+                    GROUP BY customer_id 
+                    HAVING COUNT(customer_id)>5); 
 -- 19)
+ROLLBACK;
+
 -- 20)
+CREATE TABLE emp2 (
+    id       NUMBER(3)    PRIMARY KEY,
+    nombre   VARCHAR2(10) UNIQUE,
+    salario  NUMBER       NOT NULL,
+    depto    NUMBER(2),
+    CONSTRAINT fk_emp2_depto FOREIGN KEY (depto) REFERENCES department (department_id)
+);
