@@ -200,4 +200,60 @@ EXCEPTION
 END;
 
 -- 9)
+SET SERVEROUTPUT ON
+DECLARE
+    v_employee_id employee.employee_id%type;
+    v_first_name employee.first_name%type;
+    v_last_name employee.last_name%type;
+    v_salary employee.salary%type;
+    v_cont NUMBER;
+    v_asterisco VARCHAR2(100) := ''; -- SIEMPRE HAY QUE INICIALIZARLO, sino queda en NULL y no podemos agregarle asteriscos (*)
+BEGIN
+    v_employee_id := &employee_id;
+    
+    SELECT first_name, last_name, salary
+    INTO v_first_name, v_last_name, v_salary
+    FROM employee
+    WHERE employee_id = v_employee_id;
+    
+    v_cont := TRUNC(v_salary / 100); -- Ej. Si gana $950 / 100 = 9 -> Debe imprimir 9 asteriscos (*)
+    
+    FOR i IN 1..v_cont LOOP -- Repite desde uno a v_cont = 9 veces
+        v_asterisco := v_asterisco || '*'; -- 1.*, 2.**, 3.***, ..., 9.*********
+    END LOOP;
+    
+    dbms_output.put_line('Empleado '||v_last_name||', '||v_first_name||' ('||v_employee_id||')');
+    dbms_output.put_line('Gana $'||v_salary||': '||v_asterisco);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN 
+        dbms_output.put_line('No se encontró un empleado con el ID '||v_employee_id);
+    WHEN VALUE_ERROR THEN
+        dbms_output.put_line('El valor ingresado como id de empleado es inválido.');    
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error inesperado ('||SQLCODE||'): '||SQLERRM);
+END;
+
 -- 10)
+SET SERVEROUTPUT ON
+DECLARE
+    v_num NUMBER(10);
+    
+BEGIN
+    v_num := &numero;
+    
+    IF v_num > 10 THEN
+        dbms_output.put_line('ADVERTENCIA: Ingresaste un número mayor a 10.');
+    ELSIF v_num <= 0 THEN
+        dbms_output.put_line('ADVERTENCIA: Debe ingresar un número positivo mayor a 0.');
+    ELSIF v_num <= 10 THEN
+        dbms_output.put_line('Los primeros '||v_num||' números múltiplos de 3 son...');
+        FOR i IN 1..v_num LOOP
+            dbms_output.put_line('3 x '||i||' = '||i*3);
+        END LOOP;
+    END IF;
+EXCEPTION
+    WHEN VALUE_ERROR THEN
+        DBMS_OUTPUT.PUT_LINE('El valor ingresado no es un número válido.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error inesperado (' || SQLCODE || '): ' || SQLERRM);
+END;
