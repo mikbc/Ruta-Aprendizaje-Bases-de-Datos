@@ -99,9 +99,105 @@ EXCEPTION
 END;
 
 -- 6)
-
+SET SERVEROUTPUT ON
+DECLARE
+    v_department_id department.department_id%type;
+    v_name department.name%type;
+    v_count_employee NUMBER := 0;
+BEGIN
+    v_department_id := &department_id;
+    
+    SELECT D.name, COUNT(E.employee_id)
+    INTO v_name, v_count_employee
+    FROM department D,
+        employee E
+    WHERE (D.department_id = v_department_id) 
+        AND (D.department_id = E.department_id)
+    GROUP BY D.name;
+    
+    IF v_count_employee = 0 THEN
+        dbms_output.put_line('Departamento: '||v_name||' | Sin empleados');
+    ELSIF v_count_employee >= 1 AND v_count_employee <= 10 THEN
+        dbms_output.put_line('Departamento: '||v_name||' | Cantidad de empleados: '||v_count_employee||' (Normal)');
+    ELSIF v_count_employee > 10 THEN 
+        dbms_output.put_line('Departamento: '||v_name||' | Cantidad de empleados: '||v_count_employee||' (Muchos)');
+    END IF;
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        dbms_output.put_line('No existe un departamento con ID '||v_department_id);
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error inexplicable ('||SQLCODE||'): '||SQLERRM);
+END;
 
 -- 7)
+SET SERVEROUTPUT ON
+DECLARE
+    v_product_id product.product_id%type;
+    v_name product.description%type;
+    v_count_sales NUMBER;    
+BEGIN
+    v_product_id := &product_id;
+    
+    SELECT P.description, COUNT(I.order_id)
+    INTO v_name, v_count_sales
+    FROM product P,
+        item I
+    WHERE (P.product_id = I.product_id)
+        AND (P.product_id = v_product_id)
+    GROUP BY P.description;
+    
+    IF v_count_sales IS NOT NULL THEN
+        dbms_output.put_line('El producto '||v_name||' se vendió '||v_count_sales||' veces.');
+    ELSE
+        dbms_output.put_line('El producto '||v_name||' no se vendió.');
+    END IF;
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        dbms_output.put_line('No se encontró producto con ID '||v_product_id);
+    WHEN VALUE_ERROR THEN
+        dbms_output.put_line('El tipo o tamaño del dato ingresado como código de producto no es válido.');
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error inesperado ('||SQLCODE||'): '||SQLERRM);
+END;
+
 -- 8)
+SET SERVEROUTPUT ON
+DECLARE
+    v_employee_id employee.employee_id%type;
+    
+    TYPE tr_emp IS RECORD ( -- 1) Defino la "forma" (el molde)
+        emp_employee_id employee.employee_id%type,
+        emp_employee_name employee.first_name%type,
+        emp_manager_id employee.manager_id%type,
+        emp_manager_name employee.first_name%type);
+    
+    r_emp tr_emp; -- 2) Declaro una variable con esa forma
+BEGIN
+    v_employee_id := &employee_id;
+    
+    SELECT E.employee_id, E.first_name, E.manager_id, M.first_name
+    INTO r_emp.emp_employee_id, r_emp.emp_employee_name , r_emp.emp_manager_id, r_emp.emp_manager_name -- 3) Cargo los datos en la variable r_emp que tiene el formato de tr_emp
+    FROM employee E,
+        employee M
+    WHERE (E.manager_id = M.employee_id)
+        AND (E.employee_id = v_employee_id);
+    
+    dbms_output.put_line('Empleado '||r_emp.emp_employee_name||' (ID '||r_emp.emp_employee_id||').');
+    IF r_emp.emp_manager_id IS NOT NULL THEN
+        dbms_output.put_line('- Su jefe es: '||r_emp.emp_manager_name||' (ID '||r_emp.emp_manager_id||').');
+    ELSE
+        dbms_output.put_line('No tiene jefe.');
+    END IF;
+EXCEPTION 
+    WHEN NO_DATA_FOUND THEN
+        dbms_output.put_line('No se encontró un empleado con el ID '||v_employee_id);
+    WHEN VALUE_ERROR THEN 
+        dbms_output.put_line('El tipo o tamaño del dato ingresado como código de producto no es válido.');
+    WHEN OTHERS THEN
+        dbms_output.put_line('Error inesperado ('||SQLCODE||'): '||SQLERRM);
+END;
+
 -- 9)
 -- 10)
