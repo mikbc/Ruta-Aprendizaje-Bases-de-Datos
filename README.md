@@ -5,15 +5,16 @@ Repositorio personal de **Laboratorio II**, asignatura de la carrera de **Ingeni
 
 El repositorio reúne **apuntes, ejercicios, resoluciones y trabajos prácticos**, mostrando progresivamente los conocimientos y herramientas incorporados durante la cursada.
 
-## 🛠️ Tecnologías y herramientas
+<img width="3000" height="567" alt="BD_Herramientas y Tecnologías" src="https://github.com/user-attachments/assets/b9709324-5bad-4226-aeff-c43f0ccadf2f" />
 
-* **Oracle Database**
-* **SQL**
-* **PL/SQL**
-* **Hibernate / ORM**
-* **Bases de datos NoSQL**
-* **JSON**
-* **Oracle SQL Developer**
+```sql
+SELECT knowledge
+FROM database
+WHERE subject = 'DATABASES'
+ORDER BY learning;
+
+-- learning by building, querying and understanding.
+```
 
 ## 🧠 Temas abordados
 
@@ -43,11 +44,3 @@ El contenido se organiza principalmente en:
 
 🚀 **El repositorio se encuentra en constante crecimiento a medida que avanzo en la cursada.**
 
-```sql
-SELECT knowledge
-FROM database
-WHERE subject = 'DATABASES'
-ORDER BY learning;
-
--- learning by building, querying and understanding.
-```
