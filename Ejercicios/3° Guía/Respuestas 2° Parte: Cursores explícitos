@@ -1,4 +1,28 @@
 -- 8)
+SET SERVEROUTPUT ON
+DECLARE
+    CURSOR c_order_product IS
+        SELECT SO.order_id, 
+            SO.order_date, 
+            I.product_id
+        FROM sales_order SO, 
+            item I
+        WHERE SO.order_id = I.order_id
+        ORDER BY SO.order_id;
+
+BEGIN
+    FOR i IN c_order_product LOOP
+        dbms_output.put_line('ORDEN: '||i.order_id);
+        dbms_output.put_line('- Fecha: '||i.order_date);
+        dbms_output.put_line('- ID Producto: '||i.product_id);
+        dbms_output.put_line('----------------------');
+    END LOOP;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('ERROR INESPERADO ('||SQLCODE||'): '||SQLERRM);
+END;
+
 -- 9)
 -- 10)
 -- 11)
